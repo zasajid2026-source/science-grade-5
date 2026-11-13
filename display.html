@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NNCP Science — Grade 5 — Auto Play</title>
+<style>
+  html,body{margin:0;height:100%;background:#000;overflow:hidden;font-family:Arial,sans-serif}
+  .stage{position:fixed;inset:0}
+  .stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .7s}
+  .bar{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+        padding:10px 14px;background:linear-gradient(rgba(0,0,0,.65),transparent);color:#fff;z-index:5}
+  .ttl{font-size:17px;font-weight:bold;text-shadow:0 1px 3px #000}
+  .btns button{background:rgba(20,20,20,.75);color:#fff;border:1px solid #C9A227;border-radius:10px;
+        font-size:17px;padding:9px 15px;margin-left:8px;cursor:pointer}
+  .pg{position:fixed;bottom:12px;right:16px;color:#fff;background:rgba(0,0,0,.55);border-radius:8px;
+        padding:4px 12px;font-size:14px;z-index:5}
+</style></head><body>
+<div class="stage"><img id="a"><img id="b"></div>
+<div class="bar"><div class="ttl">NNCP Science — Grade 5</div>
+<div class="btns"><button id="pp">⏸ Pause</button><button id="fs">⛶ Full Screen</button></div></div>
+<div class="pg" id="pg"></div>
+<script>
+  var TOTAL=190, DELAY=5000, cur=1, playing=true, front=0;
+  var imgs=[document.getElementById('a'),document.getElementById('b')];
+  function url(n){ return 'pages/p'+n+'.jpg'; }
+  function show(n){
+    var back=imgs[1-front], fr=imgs[front];
+    back.src=url(n);
+    back.onload=function(){ back.style.opacity=1; fr.style.opacity=0; front=1-front;
+      document.getElementById('pg').textContent='Page '+n+' / '+TOTAL;
+      var nx=new Image(); nx.src=url(n>=TOTAL?1:n+1); };
+  }
+  function tick(){ if(playing){ cur = cur>=TOTAL ? 1 : cur+1; show(cur); } }
+  show(1); setInterval(tick, DELAY);
+  document.getElementById('pp').onclick=function(){ playing=!playing;
+    this.textContent = playing ? '⏸ Pause' : '▶ Play'; };
+  document.getElementById('fs').onclick=function(){
+    if(document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen(); };
+  document.addEventListener('click',function(e){ if(e.target.tagName!=='BUTTON'){ cur = cur>=TOTAL?1:cur+1; show(cur); } });
+</script></body></html>
